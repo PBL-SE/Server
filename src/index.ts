@@ -5,6 +5,7 @@ import authRouter from './routes/auth.route.js';
 import paperRouter from './routes/paper.route.js';
 import cookieParser from 'cookie-parser';
 import client from "./config/db.js";
+import cors from 'cors';
 import './migrations/createUserTable.js';
 import './custom.js';
 import { errorHandler } from './utils/error';
@@ -24,6 +25,12 @@ const connectDB = async () => {
 };
 
 const app = express();
+
+app.use(cors({
+    origin: '*',  // Allow all origins (adjust this as needed for production)
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+}));
 
 app.use(express.json());
 app.use(cookieParser());
