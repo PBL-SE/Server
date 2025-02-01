@@ -20,10 +20,11 @@ export const fetchByQuery = async (req: Request, res: Response) => {
 
         // Check if embedding is empty
         if (queryEmbedding.length === 0) {
-            return res.status(400).json({
+            res.status(400).json({
                 message: "Empty embeddings returned",
                 error: "The BERT model returned empty embeddings.",
             });
+            return;
         }
 
         const queryEmbeddingArray = Array.from(queryEmbedding);
@@ -62,10 +63,11 @@ export const fetchByQueryAndTag = async (req: Request, res: Response) => {
 
         // Check if embedding is empty
         if (queryEmbedding.length === 0) {
-            return res.status(400).json({
+            res.status(400).json({
                 message: "Empty embeddings returned",
                 error: "The BERT model returned empty embeddings.",
             });
+            return;
         }
 
         const queryEmbeddingArray = Array.from(queryEmbedding);
