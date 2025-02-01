@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcryptjs";
 import { errorHandler } from "../utils/error";
 import jwt from "jsonwebtoken";
-import { client } from "../config/db";
+import client from "../config/db";
 
 declare module "express-serve-static-core" {
   interface Request {

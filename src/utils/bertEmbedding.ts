@@ -26,7 +26,7 @@ const getBertEmbedding = async (text: string): Promise<number[]> => {
         }
 
         console.log("✅ Generated embedding:", embeddings.data);
-        return embeddings.data[0]; // Assuming embeddings.data is an array of arrays, take the first one
+        return embeddings.data;
     } catch (error) {
         console.error("❌ Error generating BERT embedding:", error);
         return [];

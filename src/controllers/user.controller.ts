@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcryptjs";
 import { errorHandler } from "../utils/error";
-import { client } from "../config/db";  // Import 'client' from db.ts
+import client from "../config/db";
 
 export const test = (req: Request, res: Response) => {
   res.json({

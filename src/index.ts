@@ -4,7 +4,7 @@ import userRouter from './routes/user.route';
 import authRouter from './routes/auth.route';
 import paperRouter from './routes/paper.route';
 import cookieParser from 'cookie-parser';
-import { client } from './config/db';  // Import the pg Client from db.ts
+import client from "./config/db";
 import './migrations/createUserTable';
 import './custom';
 import { errorHandler } from './utils/error';

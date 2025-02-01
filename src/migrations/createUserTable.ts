@@ -1,4 +1,5 @@
-import { Client } from 'pg';
+import pkg from "pg"; // ✅ CORRECT
+const { Client } = pkg;
 import dotenv from 'dotenv';
 
 dotenv.config();
