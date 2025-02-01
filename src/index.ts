@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 import userRouter from './routes/user.route';
 import authRouter from './routes/auth.route';
+import paperRouter from './routes/paper.route';
 import cookieParser from 'cookie-parser';
 import { client } from './config/db';  // Import the pg Client from db.ts
 import './migrations/createUserTable';
@@ -29,6 +30,7 @@ app.use(cookieParser());
 
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/papers", paperRouter);
 
 interface CustomError extends Error {
     statusCode?: number;
