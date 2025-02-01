@@ -1,4 +1,4 @@
-import db from "../config/db"; // Ensure db is the pg client
+import db from "../config/db.js"; // Ensure db is the pg client
 
 export interface User {
     username: string;

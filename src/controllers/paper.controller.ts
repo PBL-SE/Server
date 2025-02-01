@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { Pinecone } from '@pinecone-database/pinecone';
-import getBertEmbedding from "../utils/bertEmbedding";
+import getBertEmbedding from "../utils/bertEmbedding.js";
 import dotenv from 'dotenv';
-import client from "../config/db";
+import client from "../config/db.js";
 
 dotenv.config();
 

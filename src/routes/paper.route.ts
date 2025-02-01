@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { fetchByQuery, fetchByQueryAndTag } from "../controllers/paper.controller";
+import { fetchByQuery, fetchByQueryAndTag } from "../controllers/paper.controller.js";
 
 const paperRouter = Router();
 paperRouter.get("/fetch-by-query", fetchByQuery);

@@ -1,10 +1,10 @@
 import express, { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
-import userRouter from './routes/user.route';
-import authRouter from './routes/auth.route';
-import paperRouter from './routes/paper.route';
+import userRouter from './routes/user.route.js';
+import authRouter from './routes/auth.route.js';
+import paperRouter from './routes/paper.route.js';
 import cookieParser from 'cookie-parser';
-import client from "./config/db";
+import client from "./config/db.js";
 import './migrations/createUserTable';
 import './custom';
 import { errorHandler } from './utils/error';

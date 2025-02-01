@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcryptjs";
-import { errorHandler } from "../utils/error";
+import { errorHandler } from "../utils/error.js";
 import jwt from "jsonwebtoken";
-import client from "../config/db";
+import client from "../config/db.js";
 
 declare module "express-serve-static-core" {
   interface Request {
