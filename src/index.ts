@@ -60,5 +60,3 @@ const startServer = async () => {
 };
 
 startServer();
-
-export { client };
