@@ -5,7 +5,7 @@ import authRouter from './routes/auth.route.js';
 import paperRouter from './routes/paper.route.js';
 import cookieParser from 'cookie-parser';
 import client from "./config/db.js";
-import './migrations/createUserTable';
+import './migrations/createUserTable.js';
 import './custom';
 import { errorHandler } from './utils/error';
 
