@@ -2,7 +2,7 @@ import { Router } from "express";
 import { fetchByQuery, fetchByQueryAndTag } from "../controllers/paper.controller.js";
 
 const paperRouter = Router();
-paperRouter.get("/fetch-by-query", fetchByQuery);
-paperRouter.get("/fetch-by-query-and-tag", fetchByQueryAndTag);
+paperRouter.post("/fetch-by-query", fetchByQuery);
+paperRouter.post("/fetch-by-query-and-tag", fetchByQueryAndTag);
 
 export default paperRouter;
