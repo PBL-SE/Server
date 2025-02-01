@@ -6,7 +6,7 @@ import paperRouter from './routes/paper.route.js';
 import cookieParser from 'cookie-parser';
 import client from "./config/db.js";
 import './migrations/createUserTable.js';
-import './custom';
+import './custom.js';
 import { errorHandler } from './utils/error';
 
 
