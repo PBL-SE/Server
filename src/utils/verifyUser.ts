@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { errorHandler } from "./error";
+import { errorHandler } from "./error.js";
 import jwt from 'jsonwebtoken';
 
 export const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
