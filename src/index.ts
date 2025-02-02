@@ -8,6 +8,7 @@ import client from "./config/db.js";
 import cors from 'cors';
 import './migrations/createUserTable.js';
 import './custom.js';
+import analyticsRouter from './routes/analytics.route.js';
 import { errorHandler } from './utils/error';
 
 
@@ -38,6 +39,7 @@ app.use(cookieParser());
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/papers", paperRouter);
+app.use("/api/analytics", analyticsRouter);
 
 interface CustomError extends Error {
     statusCode?: number;
