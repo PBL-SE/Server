@@ -40,14 +40,19 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-export default function handler(req: VercelRequest, res: VercelResponse) {
-    return res.status(200).json({ message: "Hello from Vercel!" });
-}
+app.get('/', (req: Request, res: Response) => {
+    res.send("Hello World");
+});
 
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/papers", paperRouter);
 app.use("/api/analytics", analyticsRouter);
+
+
+export default (req: VercelRequest, res: VercelResponse) => {
+    app(req, res);
+};
 
 
 interface CustomError extends Error {
