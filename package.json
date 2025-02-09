@@ -26,7 +26,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.13.0",
     "pg": "^8.13.1",
-    "pg-promise": "^11.10.2"
+    "pg-promise": "^11.10.2",
+    "vercel": "^41.0.2"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

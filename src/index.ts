@@ -11,6 +11,7 @@ import './migrations/createUserTable.js';
 import './custom.js';
 import analyticsRouter from './routes/analytics.route.js';
 import { errorHandler } from './utils/error';
+import { VercelRequest, VercelResponse } from '@vercel/node';
 
 
 dotenv.config();
@@ -39,10 +40,15 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
+export default function handler(req: VercelRequest, res: VercelResponse) {
+    return res.status(200).json({ message: "Hello from Vercel!" });
+}
+
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/papers", paperRouter);
 app.use("/api/analytics", analyticsRouter);
+
 
 interface CustomError extends Error {
     statusCode?: number;
@@ -65,7 +71,7 @@ const startServer = async () => {
     console.log("Attempting to connect to database...");
     await connectDB();  // Ensure DB connection before starting server
     console.log("Database connection successful. Now running migrations...");
-    
+
     app.listen(3000, () => {
         console.log("Listening on port 3000...");
     });
