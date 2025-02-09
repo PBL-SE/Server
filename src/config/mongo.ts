@@ -1,29 +1,31 @@
-import { MongoClient, Db } from "mongodb";
+import { Db, MongoClient, ServerApiVersion } from 'mongodb';
 import dotenv from "dotenv";
 
-dotenv.config(); // Load environment variables
+dotenv.config();
+const uri = process.env.MONGO_URL || '';
 
-const uri = process.env.MONGO_URL as string; // MongoDB connection string from .env
-const dbName = "users-db"; // Change this to your actual database name
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
+});
 
-if (!uri) {
-    throw new Error("MONGO_URL is not defined in .env");
-}
+let mongoDB: Db | null = null;
 
-// Create MongoDB client instance (similar to PostgreSQL)
-const mongoClient = new MongoClient(uri);
-let mongoDB: Db;
-
-// Function to initialize MongoDB connection
-const connectMongoDB = async () => {
-    try {
-        await mongoClient.connect();
-        mongoDB = mongoClient.db(dbName);
-    } catch (err) {
-        console.error("❌ MongoDB connection error:", err);
-        process.exit(1); // Exit on connection failure
+export const connectMongoDB = async () => {
+  try {
+    if (!mongoDB) {
+      await client.connect();  // Connect once
+      console.log("✅ Connected to MongoDB");
+      mongoDB = client.db("Users"); 
+      console.log("Connected to database:", mongoDB.databaseName);
     }
+  } catch (error) {
+    console.error("❌ MongoDB connection error:", error);
+    throw error;
+  }
 };
 
-// Export client and DB instance
-export { mongoClient, mongoDB, connectMongoDB };
+export { client, mongoDB };

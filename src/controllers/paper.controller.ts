@@ -4,7 +4,7 @@ import getBertEmbedding from "../utils/bertEmbedding.js";
 import dotenv from 'dotenv';
 import client from "../config/db.js";
 import axios from "axios";
-import { mongoDB } from "../config/mongo.js";
+import { mongoDB, client as mongoClient } from "../config/mongo.js";
 
 
 dotenv.config();
@@ -110,7 +110,8 @@ export const recommendPapers = async (req: Request, res: Response) => {
             return;
         }
 
-        const usersCollection = mongoDB.collection("users");
+        const usersCollection = mongoClient.db("users-db").collection("users");
+
         const user = await usersCollection.findOne({ user_id });
 
         if (!user) {
