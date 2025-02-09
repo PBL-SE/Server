@@ -5,6 +5,7 @@ import authRouter from './routes/auth.route.js';
 import paperRouter from './routes/paper.route.js';
 import cookieParser from 'cookie-parser';
 import client from "./config/db.js";
+import { connectMongoDB } from "./config/mongo.js";
 import cors from 'cors';
 import './migrations/createUserTable.js';
 import './custom.js';
@@ -13,14 +14,16 @@ import { errorHandler } from './utils/error';
 
 
 dotenv.config();
-console.log("DATABASE_URL from env:", process.env.DATABASE_URL);
 
 const connectDB = async () => {
     try {
-        await client.connect();  // Connect to the PostgreSQL database
-        console.log("Connected to Neon.tech PostgreSQL");
+        await client.connect(); // Connect to PostgreSQL
+        console.log("✅ Connected to Neon.tech PostgreSQL");
+
+        await connectMongoDB(); // Connect to MongoDB
+        console.log("✅ Connected to MongoDB Atlas");
     } catch (err) {
-        console.error("Neon.tech PostgreSQL connection error:", err);
+        console.error("❌ Database connection error:", err);
         process.exit(1);
     }
 };
