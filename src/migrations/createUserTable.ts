@@ -1,4 +1,4 @@
-import pkg from "pg"; // ✅ CORRECT
+/* import pkg from "pg"; // ✅ CORRECT
 const { Client } = pkg;
 import dotenv from 'dotenv';
 
@@ -32,3 +32,4 @@ const createTable = async () => {
 
 // Immediately run the migration when this file is imported
 createTable();
+ */

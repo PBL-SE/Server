@@ -1,3 +1,6 @@
+// This file was created initially to generate embeddings for the text using the BERT model
+// However, it is not used in the project anymore, we are using the remote API to generate embeddings
+
 let bertModel: any;
 
 const loadBertEmbeddingModel = async () => {
