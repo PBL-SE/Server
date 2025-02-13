@@ -1,47 +1,51 @@
-import express, { Request, Response, NextFunction } from 'express';
-import dotenv from 'dotenv';
-import userRouter from './routes/user.route.js';
-import authRouter from './routes/auth.route.js';
-import paperRouter from './routes/paper.route.js';
-import cookieParser from 'cookie-parser';
+import express, { Request, Response } from "express";
+import dotenv from "dotenv";
+import passport from "passport";
+import userRouter from "./routes/user.route.js";
+import authRouter from "./routes/auth.route.js";
+import paperRouter from "./routes/paper.route.js";
+import cookieParser from "cookie-parser";
 import client from "./config/db.js";
-import { connectMongoDB } from "./config/mongo.js";
-import cors from 'cors';
-import './migrations/createUserTable.js';
-import './custom.js';
-import analyticsRouter from './routes/analytics.route.js';
-import { errorHandler } from './utils/error';
-import { VercelRequest, VercelResponse } from '@vercel/node';
 
+import "./config/passport.js"; // Ensure Passport is loaded
+import { connectMongoDB } from "./config/mongo.js";
+import cors from "cors";
+import "./custom.js";
+import analyticsRouter from "./routes/analytics.route.js";
+import { errorHandler } from "./utils/error";
+import { VercelRequest, VercelResponse } from "@vercel/node";
 
 dotenv.config();
 
 const connectDB = async () => {
-    try {
-        await client.connect(); // Connect to PostgreSQL
-        console.log("✅ Connected to Neon.tech PostgreSQL");
+  try {
+    await client.connect(); // Connect to PostgreSQL
+    console.log("✅ Connected to Neon.tech PostgreSQL");
 
-        await connectMongoDB(); // Connect to MongoDB
-        console.log("✅ Connected to MongoDB Atlas");
-    } catch (err) {
-        console.error("❌ Database connection error:", err);
-        process.exit(1);
-    }
+    await connectMongoDB(); // Connect to MongoDB
+    console.log("✅ Connected to MongoDB Atlas");
+  } catch (err) {
+    console.error("❌ Database connection error:", err);
+    process.exit(1);
+  }
 };
 
 const app = express();
+app.use(passport.initialize());
 
-app.use(cors({
-    origin: '*',  // Allow all origins (adjust this as needed for production)
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-}));
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  })
+);
 
 app.use(express.json());
 app.use(cookieParser());
 
-app.get('/', (req: Request, res: Response) => {
-    res.send("Hello World");
+app.get("/", (req: Request, res: Response) => {
+  res.send("Hello World");
 });
 
 app.use("/api/user", userRouter);
@@ -49,37 +53,31 @@ app.use("/api/auth", authRouter);
 app.use("/api/papers", paperRouter);
 app.use("/api/analytics", analyticsRouter);
 
-
-export default (req: VercelRequest, res: VercelResponse) => {
-    app(req, res);
-};
-
-
-interface CustomError extends Error {
-    statusCode?: number;
-}
-
-const errorMiddleware = (err: CustomError, req: Request, res: Response, next: NextFunction) => {
-    const statusCode = err.statusCode || 500;
-    const message = err.message || "Internal server error";
-
-    res.status(statusCode).json({
-        success: false,
-        statusCode,
-        message
-    });
+const errorMiddleware = (
+  err: any,
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Internal server error";
+  res.status(statusCode).json({ success: false, statusCode, message });
 };
 
 app.use(errorMiddleware);
 
 const startServer = async () => {
-    console.log("Attempting to connect to database...");
-    await connectDB();  // Ensure DB connection before starting server
-    console.log("Database connection successful. Now running migrations...");
+  console.log("Attempting to connect to database...");
+  await connectDB(); // Ensure DB connection before starting server
+  console.log("Database connection successful.");
 
-    app.listen(3000, () => {
-        console.log("Listening on port 3000...");
-    });
+  app.listen(3000, () => {
+    console.log("Listening on port 3000...");
+  });
 };
 
 startServer();
+
+export default (req: VercelRequest, res: VercelResponse) => {
+  app(req, res);
+};

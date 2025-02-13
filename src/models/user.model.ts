@@ -1,9 +1,10 @@
-import db from "../config/db.js"; // Ensure db is the pg client
+import db from "../config/db.js";
 
 export interface User {
-    username: string;
-    email: string;
-    password: string;
+    username?: string;
+    email?: string;
+    provider?: string;
+    provider_id?: string;
 }
 
 export interface UserWithId extends User {
@@ -11,70 +12,31 @@ export interface UserWithId extends User {
 }
 
 export const createUser = async (user: User): Promise<UserWithId> => {
-    try {
-        const result = await db.query<UserWithId>(
-            `INSERT INTO users (username, email, password) 
-             VALUES ($1, $2, $3) RETURNING *`,
-            [user.username, user.email, user.password]
-        );
-        return result.rows[0]; // Accessing the first row
-    } catch (error) {
-        console.error(error);
-        throw new Error("Error creating user");
-    }
+    const result = await db.query<UserWithId>(
+        "INSERT INTO users (username, email, provider, provider_id) VALUES ($1, $2, $3, $4) RETURNING *",
+        [user.username, user.email, user.provider, user.provider_id]
+    );
+    return result.rows[0];
 };
 
 export const getUserByEmail = async (email: string): Promise<UserWithId | null> => {
-    try {
-        const result = await db.query<UserWithId>(
-            "SELECT * FROM users WHERE email = $1",
-            [email]
-        );
-        return result.rows[0] || null; // If no result, return null
-    } catch (error) {
-        console.error(error);
-        throw new Error("Error fetching user by email");
-    }
+    const result = await db.query<UserWithId>(
+        "SELECT * FROM users WHERE email = $1",
+        [email]
+    );
+    return result.rows[0] || null;
 };
 
 export const getUserById = async (id: string): Promise<UserWithId | null> => {
-    try {
-        const result = await db.query<UserWithId>(
-            "SELECT * FROM users WHERE id = $1",
-            [id]
-        );
-        return result.rows[0] || null; // If no result, return null
-    } catch (error) {
-        console.error(error);
-        throw new Error("Error fetching user by ID");
-    }
-};
-
-export const updatePassword = async (id: string, newPassword: string): Promise<void> => {
-    try {
-        await db.query(
-            "UPDATE users SET password = $1 WHERE id = $2",
-            [newPassword, id]
-        );
-    } catch (error) {
-        console.error(error);
-        throw new Error("Error updating password");
-    }
-};
-
-export const deleteUserById = async (id: string): Promise<void> => {
-    try {
-        await db.query("DELETE FROM users WHERE id = $1", [id]);
-    } catch (error) {
-        console.error(error);
-        throw new Error("Error deleting user");
-    }
+    const result = await db.query<UserWithId>(
+        "SELECT * FROM users WHERE id = $1",
+        [id]
+    );
+    return result.rows[0] || null;
 };
 
 export default {
     createUser,
     getUserByEmail,
     getUserById,
-    updatePassword,
-    deleteUserById, // Add the transaction-based method if needed
 };
