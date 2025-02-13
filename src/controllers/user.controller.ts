@@ -5,7 +5,7 @@ import client from "../config/db.js";
 
 export const test = (req: Request, res: Response) => {
   res.json({
-    message: "sab changa si",
+    message: "everythings okay",
   });
 };
 
