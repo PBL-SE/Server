@@ -9,34 +9,46 @@ export interface User {
 
 export interface UserWithId extends User {
     id: string;
+    onboarded: boolean;
 }
 
 export const createUser = async (user: User): Promise<UserWithId> => {
     const result = await db.query<UserWithId>(
-        "INSERT INTO users (username, email, provider, provider_id) VALUES ($1, $2, $3, $4) RETURNING *",
+        "INSERT INTO users (username, email, provider, provider_id, onboarded) VALUES ($1, $2, $3, $4, FALSE) RETURNING *",
         [user.username, user.email, user.provider, user.provider_id]
     );
     return result.rows[0];
 };
 
-export const getUserByEmail = async (email: string): Promise<UserWithId | null> => {
+export const getUserById = async (user_id: string): Promise<UserWithId | null> => {
     const result = await db.query<UserWithId>(
-        "SELECT * FROM users WHERE email = $1",
-        [email]
+        "SELECT * FROM users WHERE user_id = $1",
+        [user_id]
     );
     return result.rows[0] || null;
 };
 
-export const getUserById = async (id: string): Promise<UserWithId | null> => {
-    const result = await db.query<UserWithId>(
-        "SELECT * FROM users WHERE id = $1",
-        [id]
-    );
-    return result.rows[0] || null;
+
+const updateOnboardedStatus = async (userId: string, onboarded: boolean) => {
+    try {
+        console.log(`🔹 Running UPDATE query for user ${userId}...`);
+        const result = await db.query(
+            "UPDATE users SET onboarded = $1 WHERE user_id = $2", 
+            [onboarded, userId]
+        );
+        console.log("✅ Update query result:", result);
+        return result;
+    } catch (error) {
+        console.error("❌ Error in updateOnboardedStatus:", error);
+        throw error;
+    }
 };
+
+
+
 
 export default {
     createUser,
-    getUserByEmail,
     getUserById,
+    updateOnboardedStatus,
 };

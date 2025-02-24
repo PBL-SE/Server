@@ -1,83 +1,80 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import dotenv from "dotenv";
 import passport from "passport";
-import userRouter from "./routes/user.route.js";
+import session from "express-session";
+import { Request, Response, NextFunction } from "express";
 import authRouter from "./routes/auth.route.js";
 import paperRouter from "./routes/paper.route.js";
+import analyticsRouter from "./routes/analytics.route.js";
 import cookieParser from "cookie-parser";
 import client from "./config/db.js";
-
 import "./config/passport.js"; // Ensure Passport is loaded
 import { connectMongoDB } from "./config/mongo.js";
 import cors from "cors";
-import "./custom.js";
-import analyticsRouter from "./routes/analytics.route.js";
-import { errorHandler } from "./utils/error";
-import { VercelRequest, VercelResponse } from "@vercel/node";
 
 dotenv.config();
 
-const connectDB = async () => {
-  try {
-    await client.connect(); // Connect to PostgreSQL
-    console.log("✅ Connected to Neon.tech PostgreSQL");
-
-    await connectMongoDB(); // Connect to MongoDB
-    console.log("✅ Connected to MongoDB Atlas");
-  } catch (err) {
-    console.error("❌ Database connection error:", err);
-    process.exit(1);
-  }
-};
-
 const app = express();
-app.use(passport.initialize());
 
+// ✅ CORS Middleware (Before Routes)
 app.use(
   cors({
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+    origin: process.env.FRONTEND_URL ,
+    credentials: true, // ✅ Allow cookies
   })
 );
 
 app.use(express.json());
 app.use(cookieParser());
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello World");
-});
+// ✅ SESSION SETUP
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET!,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",  // Make sure this is set properly
+      sameSite: "strict",
+    },
+  })
+);
 
-app.use("/api/user", userRouter);
+// ✅ Initialize Passport with sessions
+app.use(passport.initialize());
+app.use(passport.session());
+
+// ✅ Routes
 app.use("/api/auth", authRouter);
 app.use("/api/papers", paperRouter);
 app.use("/api/analytics", analyticsRouter);
 
-const errorMiddleware = (
-  err: any,
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
-) => {
-  const statusCode = err.statusCode || 500;
-  const message = err.message || "Internal server error";
-  res.status(statusCode).json({ success: false, statusCode, message });
-};
+// ✅ Root Route
+app.get("/", (req, res) => {
+  res.send("Hello World");
+});
 
-app.use(errorMiddleware);
+// ✅ Error Handler
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  res.status(err.status || 500).json({ message: err.message || "Server Error" });
+});
 
+// ✅ Start Server
 const startServer = async () => {
-  console.log("Attempting to connect to database...");
-  await connectDB(); // Ensure DB connection before starting server
-  console.log("Database connection successful.");
+  try {
+    console.log("Connecting to DB...");
+    await client.connect();
+    console.log("✅ Connected to PostgreSQL");
 
-  app.listen(3000, () => {
-    console.log("Listening on port 3000...");
-  });
+    await connectMongoDB();
+    console.log("✅ Connected to MongoDB");
+
+    app.listen(3000, () => console.log("🚀 Server running on http://localhost:3000"));
+  } catch (err) {
+    console.error("❌ Database error:", err);
+    process.exit(1);
+  }
 };
 
 startServer();
-
-export default (req: VercelRequest, res: VercelResponse) => {
-  app(req, res);
-};
