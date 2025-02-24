@@ -77,11 +77,11 @@ passport.serializeUser((user: any, done) => {
 
 passport.deserializeUser(async (user_id: string, done) => {
   try {
-    console.log("Deserializing user:", user_id);
+    // console.log("Deserializing user:", user_id);
     const result = await client.query("SELECT * FROM users WHERE user_id=$1", [user_id]);
     
     if (result.rows.length > 0) {
-      console.log("User found:", result.rows[0]);
+      // console.log("User found:", result.rows[0]);
       done(null, {
         user_id: result.rows[0].user_id,  // Ensure user_id is present
         provider_id: result.rows[0].provider_id,

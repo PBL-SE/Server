@@ -31,15 +31,15 @@ export const getUserById = async (user_id: string): Promise<UserWithId | null> =
 
 const updateOnboardedStatus = async (userId: string, onboarded: boolean) => {
     try {
-        console.log(`🔹 Running UPDATE query for user ${userId}...`);
+        // console.log(`🔹 Running UPDATE query for user ${userId}...`);
         const result = await db.query(
             "UPDATE users SET onboarded = $1 WHERE user_id = $2", 
             [onboarded, userId]
         );
-        console.log("✅ Update query result:", result);
+        // console.log("✅ Update query result:", result);
         return result;
     } catch (error) {
-        console.error("❌ Error in updateOnboardedStatus:", error);
+        // console.error("❌ Error in updateOnboardedStatus:", error);
         throw error;
     }
 };

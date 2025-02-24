@@ -33,16 +33,16 @@ router.get(
 
 
 router.get("/me", (req: AuthenticatedRequest, res: Response) => {
-  console.log("🔍 Checking /me route...");
-  console.log("🔹 Is Authenticated:", req.isAuthenticated());
-  console.log("🔹 User in Request:", req.user);
+  // console.log("🔍 Checking /me route...");
+  // console.log("🔹 Is Authenticated:", req.isAuthenticated());
+  // console.log("🔹 User in Request:", req.user);
 
   if (req.isAuthenticated() && req.user) {
-    console.log("✅ User is authenticated:", req.user);
+    // console.log("✅ User is authenticated:", req.user);
     return res.json({ existing: true, user: req.user });
   }
 
-  console.log("❌ User is not authenticated!");
+  // console.log("❌ User is not authenticated!");
   return res.status(401).json({ existing: false, error: "Unauthorized" });
 });
 
@@ -51,9 +51,9 @@ router.get("/me", (req: AuthenticatedRequest, res: Response) => {
 
 // ✅ Verify Session
 router.get("/onboarding-status", (req: AuthenticatedRequest, res: Response) => {
-  console.log("🔍 Checking /onboarding-status route...");
-  console.log("🔹 Is Authenticated:", req.isAuthenticated());
-  console.log("🔹 User in Request:", req.user);
+  // console.log("🔍 Checking /onboarding-status route...");
+  // console.log("🔹 Is Authenticated:", req.isAuthenticated());
+  // console.log("🔹 User in Request:", req.user);
 
   if (req.isAuthenticated() && req.user) {
     return res.json({ user: { user_id: req.user.id, onboarded: req.user.onboarded } });
@@ -67,9 +67,9 @@ router.get("/onboarding-status", (req: AuthenticatedRequest, res: Response) => {
 
 
 const isAuthenticated = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-  console.log("🔍 Checking Authentication Middleware...");
-  console.log("🔹 Is Authenticated:", req.isAuthenticated());
-  console.log("🔹 User in Request:", req.user);
+  // console.log("🔍 Checking Authentication Middleware...");
+  // console.log("🔹 Is Authenticated:", req.isAuthenticated());
+  // console.log("🔹 User in Request:", req.user);
 
   if (req.isAuthenticated() && req.user && req.user.user_id) {
     return next();
@@ -84,22 +84,22 @@ router.post("/onboarding", isAuthenticated, async (req, res) => {
   const { user_id } = req.user as any;
 
   if (!user_id) {
-      console.log("❌ User ID not found.");
+      // console.log("❌ User ID not found.");
       return res.status(401).json({ message: "Unauthorized" });
   }
 
   try {
-      console.log(`🔹 Attempting to update onboarding for user: ${user_id}`);
+      // console.log(`🔹 Attempting to update onboarding for user: ${user_id}`);
       const success = await userModel.updateOnboardedStatus(user_id, true);
       
       if (!success) {
-          console.log("❌ No rows updated. Maybe user_id is wrong?");
+          // console.log("❌ No rows updated. Maybe user_id is wrong?");
           return res.status(400).json({ message: "Failed to update onboarding status" });
       }
 
       res.status(200).json({ message: "Onboarding status updated successfully" });
   } catch (error) {
-      console.error("❌ Error updating onboarding status:", error);
+      // console.error("❌ Error updating onboarding status:", error);
       res.status(500).json({ error: "Internal Server Error" });
   }
 });
