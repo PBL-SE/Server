@@ -72,10 +72,12 @@ passport.use(
 
 // ✅ Session Management
 passport.serializeUser((user: any, done) => {
+  console.log("Serializing user:", user);
   done(null, user.user_id);
 });
 
 passport.deserializeUser(async (user_id: string, done) => {
+  console.log("Deserializing user with ID:", user_id);
   try {
     // console.log("Deserializing user:", user_id);
     const result = await client.query("SELECT * FROM users WHERE user_id=$1", [user_id]);

@@ -33,9 +33,9 @@ router.get(
 
 
 router.get("/me", (req: AuthenticatedRequest, res: Response) => {
-  // console.log("🔍 Checking /me route...");
-  // console.log("🔹 Is Authenticated:", req.isAuthenticated());
-  // console.log("🔹 User in Request:", req.user);
+  console.log("🔍 Checking /me route...");
+  console.log("🔹 Is Authenticated:", req.isAuthenticated());
+  console.log("🔹 User in Request:", req.user);
 
   if (req.isAuthenticated() && req.user) {
     // console.log("✅ User is authenticated:", req.user);
