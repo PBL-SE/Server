@@ -36,7 +36,7 @@ app.use(
     cookie: {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",  // Make sure this is set properly
-      sameSite: "strict",
+      sameSite: "none",
     },
   })
 );
