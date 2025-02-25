@@ -27,24 +27,39 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
+const isProduction = process.env.NODE_ENV === 'production';
+
+// For secure cookies behind a proxy
+if (isProduction) {
+  app.set("trust proxy", 1);
+}
+
 // ✅ SESSION SETUP
 app.use(
   session({
     secret: process.env.SESSION_SECRET!,
-    resave: false,
+    resave: true,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",  // Make sure this is set properly
-      sameSite: "none",
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days expiration
-    },
+      secure: isProduction, // Only use secure in production
+      sameSite: isProduction ? 'none' : 'lax', // Use 'lax' for local development
+      maxAge: 1000 * 60 * 60 * 24 * 7
+    }
   })
 );
 
 // ✅ Initialize Passport with sessions
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use((req, res, next) => {
+  console.log('----SESSION DEBUG----');
+  console.log('Session ID:', req.sessionID);
+  console.log('Is Authenticated:', req.isAuthenticated?.());
+  console.log('Session Cookie:', req.cookies['connect.sid'] ? 'Exists' : 'Missing');
+  next();
+});
 
 // ✅ Routes
 app.use("/api/auth", authRouter);

@@ -28,6 +28,7 @@ export const authCallback = (provider: string) => async (req: AuthenticatedReque
   const existingUser = await userModel.getUserById(req.user.id);
 
   if (existingUser) {
+    console.log(`${provider} auth success`)
     res.redirect(existingUser.onboarded ? `${FRONTEND_URL}/home` : `${FRONTEND_URL}/onboarding`);
   } else {
     res.redirect(`${FRONTEND_URL}/home`);
