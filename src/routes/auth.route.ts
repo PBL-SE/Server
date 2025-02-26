@@ -106,17 +106,7 @@ router.post("/onboarding", isAuthenticated, async (req, res) => {
 });
 
 
-
-
-
-
 // ✅ Logout
-router.get("/logout", (req: Request, res: Response, next: NextFunction) => {
-  req.logout((err) => {
-    if (err) return next(err);
-    res.clearCookie("connect.sid");
-    res.json({ success: true, message: "Logged out successfully" });
-  });
-});
+router.post("/logout", logout);
 
 export default router;

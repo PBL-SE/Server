@@ -36,9 +36,12 @@ export const authCallback = (provider: string) => async (req: AuthenticatedReque
 };
 
 export const logout = (req: Request, res: Response) => {
-  req.logout((err) => {
-    if (err) return res.status(500).json({ message: "Logout failed" });
-    res.clearCookie("connect.sid"); // Clear session cookie
-    res.json({ message: "Logged out successfully" });
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).json({ message: "Logout failed" });
+    }
+    res.clearCookie("connect.sid"); // Remove session cookie
+    console.log('removed cookie')
+    res.status(200).json({ message: "Logged out successfully" });
   });
 };
