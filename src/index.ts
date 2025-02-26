@@ -19,8 +19,10 @@ const app = express();
 // ✅ CORS Middleware (Before Routes)
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL ,
-    credentials: true, // ✅ Allow cookies
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
   })
 );
 
@@ -37,14 +39,15 @@ if (isProduction) {
 // ✅ SESSION SETUP
 app.use(
   session({
-    secret: process.env.SESSION_SECRET!,
+    secret: process.env.SESSION_SECRET || 'your-session-secret',
     resave: true,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
       secure: isProduction, // Only use secure in production
       sameSite: isProduction ? 'none' : 'lax', // Use 'lax' for local development
-      maxAge: 1000 * 60 * 60 * 24 * 7
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      domain: isProduction ? '.edc-pict.site' : undefined,
     }
   })
 );
@@ -58,6 +61,8 @@ app.use((req, res, next) => {
   console.log('Session ID:', req.sessionID);
   console.log('Is Authenticated:', req.isAuthenticated?.());
   console.log('Session Cookie:', req.cookies['connect.sid'] ? 'Exists' : 'Missing');
+  console.log('Request Origin:', req.headers.origin);
+  console.log('Request Referrer:', req.headers.referer);
   next();
 });
 
