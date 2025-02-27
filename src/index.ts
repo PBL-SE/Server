@@ -5,6 +5,7 @@ import session from "express-session";
 import { Request, Response, NextFunction } from "express";
 import authRouter from "./routes/auth.route.js";
 import paperRouter from "./routes/paper.route.js";
+import libraryRouter from "./routes/library.route.js";
 import analyticsRouter from "./routes/analytics.route.js";
 import cookieParser from "cookie-parser";
 import client from "./config/db.js";
@@ -56,7 +57,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use((req, res, next) => {
+/* app.use((req, res, next) => {
   console.log('----SESSION DEBUG----');
   console.log('Session ID:', req.sessionID);
   console.log('Is Authenticated:', req.isAuthenticated?.());
@@ -64,12 +65,13 @@ app.use((req, res, next) => {
   console.log('Request Origin:', req.headers.origin);
   console.log('Request Referrer:', req.headers.referer);
   next();
-});
+}); */
 
 // ✅ Routes
 app.use("/api/auth", authRouter);
 app.use("/api/papers", paperRouter);
 app.use("/api/analytics", analyticsRouter);
+app.use("/api/library", libraryRouter);
 
 // ✅ Root Route
 app.get("/", (req, res) => {
