@@ -25,7 +25,12 @@ const authenticateUser = async (profile: any, done: any, provider: string) => {
         [provider_id, provider]
       );
 
-      return done(null, { user_id: newUser.rows[0].user_id });
+      return done(null, {
+        user_id: newUser.rows[0].user_id,
+        provider,
+        provider_id,
+        onboarded: false,
+      });
     }
   } catch (err) {
     return done(err, null);
@@ -73,23 +78,20 @@ passport.use(
 // ✅ Session Management
 passport.serializeUser((user: any, done) => {
   console.log("Serializing user:", user);
-  done(null, user.user_id);
+  done(null, {
+    user_id: user.user_id,
+    onboarded: user.onboarded,
+  });
 });
 
-passport.deserializeUser(async (user_id: string, done) => {
+passport.deserializeUser(async (user: any, done) => {
+  const user_id = typeof user === "object" ? user.user_id : user; // Ensure it's a number
   console.log("Deserializing user with ID:", user_id);
+  
   try {
-    // console.log("Deserializing user:", user_id);
     const result = await client.query("SELECT * FROM users WHERE user_id=$1", [user_id]);
-    
     if (result.rows.length > 0) {
-      // console.log("User found:", result.rows[0]);
-      done(null, {
-        user_id: result.rows[0].user_id,  // Ensure user_id is present
-        provider_id: result.rows[0].provider_id,
-        provider: result.rows[0].provider,
-        onboarded: result.rows[0].onboarded
-      });
+      done(null, result.rows[0]);
     } else {
       console.log("❌ User not found");
       done(null, null);
@@ -99,6 +101,7 @@ passport.deserializeUser(async (user_id: string, done) => {
     done(err, null);
   }
 });
+
 
 
 

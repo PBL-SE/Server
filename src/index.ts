@@ -3,14 +3,15 @@ import dotenv from "dotenv";
 import passport from "passport";
 import session from "express-session";
 import { Request, Response, NextFunction } from "express";
-import authRouter from "./routes/auth.route.js";
-import paperRouter from "./routes/paper.route.js";
-import libraryRouter from "./routes/library.route.js";
-import analyticsRouter from "./routes/analytics.route.js";
+import authRouter from "./routes/auth.route";
+import userRouter from "./routes/user.route";
+// import paperRouter from "./routes/paper.route";
+// import libraryRouter from "./routes/library.route";
+// import analyticsRouter from "./routes/analytics.route";
 import cookieParser from "cookie-parser";
-import client from "./config/db.js";
+import client from "./config/db";
 import "./config/passport.js"; // Ensure Passport is loaded
-import { connectMongoDB } from "./config/mongo.js";
+import { connectMongoDB } from "./config/mongo";
 import cors from "cors";
 
 dotenv.config();
@@ -69,9 +70,10 @@ app.use(passport.session());
 
 // ✅ Routes
 app.use("/api/auth", authRouter);
-app.use("/api/papers", paperRouter);
-app.use("/api/analytics", analyticsRouter);
-app.use("/api/library", libraryRouter);
+app.use("/api/user",userRouter);
+// app.use("/api/papers", paperRouter);
+// app.use("/api/analytics", analyticsRouter);
+// app.use("/api/library", libraryRouter);
 
 // ✅ Root Route
 app.get("/", (req, res) => {

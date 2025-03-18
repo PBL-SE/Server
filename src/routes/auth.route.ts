@@ -2,7 +2,8 @@ import { Router, Request, Response, NextFunction } from "express";
 import passport from "passport";
 import { googleAuth, githubAuth, facebookAuth, authCallback, logout } from "../controllers/auth.controller.js";
 import userModel from "../models/user.model.js";
-import { AuthenticatedRequest } from "../types/express.js"; 
+import { AuthenticatedRequest } from "../types/express.js";
+import { getSession } from "../controllers/auth.controller.js"; 
 
 const router = Router();
 
@@ -110,3 +111,10 @@ router.post("/onboarding", isAuthenticated, async (req, res) => {
 router.post("/logout", logout);
 
 export default router;
+
+
+
+
+
+
+// router.get("/session", getSession);

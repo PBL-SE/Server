@@ -17,9 +17,9 @@ let mongoDB: Db | null = null;
 export const connectMongoDB = async () => {
   try {
     if (!mongoDB) {
-      await client.connect();  // Connect once
+      await client.connect();  // ✅ Keep MongoDB Client
       console.log("✅ Connected to MongoDB");
-      mongoDB = client.db("Users"); 
+      mongoDB = client.db("users-db"); 
       console.log("Connected to database:", mongoDB.databaseName);
     }
   } catch (error) {
@@ -28,4 +28,4 @@ export const connectMongoDB = async () => {
   }
 };
 
-export { client, mongoDB };
+export { client, mongoDB }; // ✅ Keep the exports the same
