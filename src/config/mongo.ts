@@ -1,6 +1,11 @@
 import { Db, MongoClient, ServerApiVersion } from 'mongodb';
 import dotenv from "dotenv";
 
+export { client, mongoDB }; 
+
+
+import mongoose from 'mongoose';
+
 dotenv.config();
 const uri = process.env.MONGODB_URI || '';
 
@@ -28,4 +33,17 @@ export const connectMongoDB = async () => {
   }
 };
 
-export { client, mongoDB }; // ✅ Keep the exports the same
+
+
+export const connectMongo = async () => {
+  try {
+    await mongoose.connect(uri, { dbName: "Users" });
+
+    console.log('MongoDB connected');
+  } catch (err) {
+    console.error('MongoDB connection error:', err);
+    process.exit(1);
+  }
+};
+
+
