@@ -5,7 +5,7 @@ import { Request, Response, NextFunction } from "express";
 import authRouter from "./routes/auth.route";
 import './auth';
 
-
+import doiRouter from "./routes/doi.route.js";
 import paperRouter from "./routes/paper.route";
 import libraryRouter from "./routes/library.route";
 import analyticsRouter from "./routes/analytics.route";
@@ -39,6 +39,8 @@ app.use("/api/auth", authRouter);
 app.use("/api/papers", paperRouter);
 app.use("/api/analytics", analyticsRouter);
 app.use("/api/library", libraryRouter);
+app.use("/doi", doiRouter);
+
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   res.status(err.status || 500).json({ message: err.message || "Server Error" });
